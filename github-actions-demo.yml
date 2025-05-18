@@ -1,0 +1,11 @@
+- name: Yandex Cloud CR "Login" Action for GitHub Actions
+  uses: yc-actions/yc-cr-login@v2.0.0
+
+- name: Build, tag, and push image to Yandex Cloud Container Registry
+  env:
+    CR_REGISTRY: crpimvecm0b86e4qccrt
+    CR_REPOSITORY: my-cr-repo
+    IMAGE_TAG: ${{ github.sha }}
+  run: |
+    docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+    docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
