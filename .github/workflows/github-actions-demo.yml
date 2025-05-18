@@ -11,6 +11,9 @@ jobs:
        - name: checkout
          uses: actions/checkout@v4
 
+       - name: Unsafe check secret
+         run: echo ${{ secrets.YC_SA_ID }}
+
        - name: Login to Yandex Cloud Container Registry
          id: login-cr
          uses: yc-actions/yc-cr-login@v3
