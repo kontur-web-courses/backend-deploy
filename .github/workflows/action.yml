@@ -1,0 +1,27 @@
+on: push
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  yc_deploy_job:
+    runs-on: ubuntu-latest
+    name: A job to deploy to Yandex Cloud
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v3
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        env:
+          CR_REGISTRY: crps0sf3kvdaq91fm1gi
+          CR_REPOSITORY: my-cr-repo
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
